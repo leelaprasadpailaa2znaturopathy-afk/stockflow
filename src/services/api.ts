@@ -1,10 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '');
-
-if (!API_URL) {
-  throw new Error('VITE_API_URL environment variable is required in production.');
-}
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : window.location.origin);
 
 interface Product {
   _id?: string;

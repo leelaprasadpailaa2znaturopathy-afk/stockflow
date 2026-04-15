@@ -50,11 +50,23 @@ export default function App() {
       }
     };
 
+    const setBrowserFavicon = (iconDataUri: string) => {
+      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement | null;
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      link.href = iconDataUri;
+    };
+
     // Fetch logo from MongoDB
     const fetchLogo = async () => {
       try {
         const base64Logo = await apiService.getLogo();
-        setLogoDataUri(`data:image/png;base64,${base64Logo}`);
+        const dataUri = `data:image/png;base64,${base64Logo}`;
+        setLogoDataUri(dataUri);
+        setBrowserFavicon(dataUri);
       } catch (error) {
         console.error('Failed to fetch logo:', error);
         // Logo will not display if fetch fails, but app continues
