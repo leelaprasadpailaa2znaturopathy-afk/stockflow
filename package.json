@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node --import tsx ./server.ts",
     "server": "node --import tsx ./server.ts",
     "client": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",

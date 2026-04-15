@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
@@ -12,6 +14,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const isProduction = process.env.NODE_ENV === 'production';
 const MONGODB_URI = process.env.MONGODB_URI || (!isProduction ? 'mongodb://127.0.0.1:27017/stockflow' : '');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.join(__dirname, 'dist');
 
 if (isProduction && !process.env.MONGODB_URI) {
   console.error('❌ MONGODB_URI environment variable is required in production.');
@@ -434,4 +439,20 @@ app.post('/api/setup/logo', async (req: Request, res: Response) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+// ============================================================
+// PRODUCTION STATIC FILES
+// ============================================================
+
+if (isProduction) {
+  app.use(express.static(distPath));
+
+  app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
