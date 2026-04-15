@@ -10,7 +10,13 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/stockflow';
+const MONGODB_URI = process.env.MONGODB_URI || '';
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is required.');
+  process.exit(1);
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@stockflow.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
@@ -34,10 +40,10 @@ const connectToMongo = async (uri: string): Promise<boolean> => {
 };
 
 const startServer = async () => {
-  const connected = await connectToMongo(MONGODB_URI) || await connectToMongo('mongodb://localhost:27017/stockflow');
+  const connected = await connectToMongo(MONGODB_URI);
 
   if (!connected) {
-    console.error('❌ Could not connect to MongoDB. Make sure MongoDB is running or update MONGODB_URI in .env.');
+    console.error('❌ Could not connect to MongoDB. Make sure MONGODB_URI is set and valid.');
     process.exit(1);
   }
 
@@ -69,8 +75,6 @@ const startServer = async () => {
     console.log('⚠️  Change ADMIN_PASSWORD in .env for production\n');
   });
 };
-
-startServer();
 
 // ============================================================
 // MongoDB Schemas & Models
@@ -126,6 +130,8 @@ const configSchema = new mongoose.Schema({
 });
 
 const Config = mongoose.model('Config', configSchema);
+
+startServer();
 
 interface AuthRequest extends Request {
   admin?: { email: string };
