@@ -1,0 +1,5 @@
+{
+  "name": "StockFlow",
+  "description": "A simple, efficient, and user-friendly web application for product inventory management with real-time updates and activity logging.",
+  "requestFramePermissions": []
+}
