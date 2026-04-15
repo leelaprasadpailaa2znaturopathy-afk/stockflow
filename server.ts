@@ -70,7 +70,7 @@ const startServer = async () => {
   await initializeLogo();
 
   app.listen(PORT, () => {
-    console.log(`\n🚀 Stockflow API running on http://localhost:${PORT}`);
+    console.log(`\n🚀 Stockflow API running on port ${PORT}`);
     console.log(`📊 Admin Login: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
     console.log('⚠️  Change ADMIN_PASSWORD in .env for production\n');
   });
