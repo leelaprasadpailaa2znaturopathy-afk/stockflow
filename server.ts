@@ -10,10 +10,11 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || '';
+const isProduction = process.env.NODE_ENV === 'production';
+const MONGODB_URI = process.env.MONGODB_URI || (!isProduction ? 'mongodb://127.0.0.1:27017/stockflow' : '');
 
-if (!MONGODB_URI) {
-  console.error('❌ MONGODB_URI environment variable is required.');
+if (isProduction && !process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is required in production.');
   process.exit(1);
 }
 
